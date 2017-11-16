@@ -4,6 +4,7 @@
 import psycopg2
 DB_NAME = "news"
 
+
 # Connect to database
 def connect_db(question):
     db = psycopg2.connect(database=DB_NAME)
@@ -12,6 +13,7 @@ def connect_db(question):
     results = c.fetchall()
     db.close()
     return results
+
 
 # 1. What are the most popular three articles of all time?
 question_1 = """select title, views
@@ -58,11 +60,12 @@ def popular_authors():
 def error_days():
     error_days = connect_db(question_3)
     print_question("3. On which days did more than
-    1% of requests lead to errors?")
+        1% of requests lead to errors?")
+
 
     for day, errorpercentage in error_days:
         print("""{0:%B %d, %Y} -- {1:.2f} % errors""".
-        format(day, errorpercentage))
+            format(day, errorpercentage))
 
 
 if __name__ == '__main__':
