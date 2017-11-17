@@ -6,13 +6,24 @@ DB_NAME = "news"
 
 
 # Connect to database
-def connect_db(question):
-    db = psycopg2.connect(database=DB_NAME)
-    c = db.cursor()
-    c.execute(question)
-    results = c.fetchall()
-    db.close()
-    return results
+def execute_query(question):
+    """
+    takes an SQL query as paramter,
+    executes the query and returns the result as a lost of tuples
+    args:
+        question - an SQL query statement to be executed
+    returns:
+        a list of tuples containing the results of the query.
+    """
+    try:
+        db = psycopg2.connect(database=DB_NAME)
+        c = db.cursor()
+        c.execute(question)
+        results = c.fetchall()
+        db.close()
+        return results
+    except:
+        print("Error connecting to database")
 
 
 # 1. What are the most popular three articles of all time?
@@ -40,7 +51,7 @@ def print_question(title):
 
 # Print 1. Who are the most popular article authors of all time?
 def popular_articles():
-    popular_articles = connect_db(question_1)
+    popular_articles = execute_query(question_1)
     print_question("1. What are the most popular three articles of all time?")
 
     for title, num in popular_articles:
@@ -49,7 +60,7 @@ def popular_articles():
 
 # Print 2. On which days did more than 1% of requests lead to errors?
 def popular_authors():
-    popular_authors = connect_db(question_2)
+    popular_authors = execute_query(question_2)
     print_question("2. Who are the most popular article authors of all time?")
 
     for name, num in popular_authors:
@@ -58,12 +69,12 @@ def popular_authors():
 
 # Print 3. On which days did more than 1% of requsets lead to errors?
 def error_days():
-    error_days = connect_db(question_3)
+    error_days = execute_query(question_3)
     print_question("""3. On which days did more than
         1% of requests lead to errors?""")
     for day, errorpercentage in error_days:
         print("""{0:%B %d, %Y} -- {1:.2f} % errors""".
-            format(day, errorpercentage))
+              format(day, errorpercentage))
 
 
 if __name__ == '__main__':
